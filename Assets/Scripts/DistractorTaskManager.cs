@@ -69,7 +69,8 @@ public class DistractorTaskManager : MonoBehaviour
             enabled = false;
             return;
         }
-        
+
+        canvas.transform.SetPositionAndRotation(mainCamera.transform.position + mainCamera.transform.forward * distanceFromCamera, mainCamera.transform.rotation);
 
         var mainCameraTransform = mainCamera.transform;
         
