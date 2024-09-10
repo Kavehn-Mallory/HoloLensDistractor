@@ -70,9 +70,11 @@ public class DistractorTaskManager : MonoBehaviour
             return;
         }
 
-        canvas.transform.SetPositionAndRotation(mainCamera.transform.position + mainCamera.transform.forward * distanceFromCamera, mainCamera.transform.rotation);
-
+        
         var mainCameraTransform = mainCamera.transform;
+        canvas.transform.SetLocalPositionAndRotation(Vector3.forward * distanceFromCamera, mainCamera.transform.rotation);
+
+        
         
 
         var angle = 360f / (numberOfDistractors + 1);
@@ -148,6 +150,11 @@ public class DistractorTaskManager : MonoBehaviour
     private void OnCorrectButtonClicked()
     {
         Debug.Log("Correct button pressed");
+    }
+
+    public void TestButtonClick()
+    {
+        Debug.Log("Button was clicked");
     }
 
 
