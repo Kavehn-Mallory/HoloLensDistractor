@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,6 +13,13 @@ public class DistractorTaskManager : MonoBehaviour
     [SerializeField] private int numberOfDistractors = 5;
     [SerializeField] private float distanceFromCenter = 1f;
     [SerializeField] private float distanceFromCamera = 1f;
+    [SerializeField] private float canvasWidth = 1f;
+    [Tooltip("Determines the distance of the distractors from the center based on the horizontal viewing angle")]
+    [SerializeField] private float targetDistractorAngleFromCenter = 5f;
+    [Tooltip("Determines the distance of the peripheral distractor from the center based on the horizontal viewing angle")]
+    [SerializeField] private float peripheralDistractorAngleFromCenter = 7f;
+    [Tooltip("Determines the size of the distractors based on the horizontal viewing angle")]
+    [SerializeField] private float targetDistractorViewAngle = 2f;
     [SerializeField] private Vector2 peripheralDistractorPosition = new Vector2(-300, 0);
     [SerializeField] private float peripheralDistractorFontSize = 48f;
     
@@ -21,6 +29,8 @@ public class DistractorTaskManager : MonoBehaviour
     
 
     private int _currentGroup;
+
+    private float _adjustedFontSize = 1f;
     
 
     private string[][] _distractorShapes;
@@ -31,6 +41,9 @@ public class DistractorTaskManager : MonoBehaviour
 
     private void Awake()
     {
+
+        CalculateOffsets();
+        
         _currentGroup = 0;
         _targetElementIndex = -1;
         _distractorShapes = new string[distractorShapes.Length][];
@@ -61,6 +74,7 @@ public class DistractorTaskManager : MonoBehaviour
         _peripheralDistractor.gameObject.name = "Peripheral Distractor";
         _peripheralDistractor.fontSize = peripheralDistractorFontSize;
         
+        
         var mainCamera = Camera.main;
         
         if (!mainCamera)
@@ -84,9 +98,47 @@ public class DistractorTaskManager : MonoBehaviour
         {
             distractor.PlaceLabelsAtPosition(mainCameraTransform, distanceFromCenter, currentAngle);
             currentAngle += angle;
+            distractor.fontSize = _adjustedFontSize;
         }
 
+        _peripheralDistractor.fontSize = 2 * _adjustedFontSize;
+        
         StartNextTrial();
+    }
+
+    private void CalculateOffsets()
+    {
+        //all units in meters?
+        var targetOffset = CalculateActualSize(distanceFromCamera, targetDistractorAngleFromCenter);
+        var targetSize = CalculateActualSize(distanceFromCamera, targetDistractorViewAngle);
+        var peripheralOffset = CalculateActualSize(distanceFromCamera, peripheralDistractorAngleFromCenter);
+        
+        
+        //lets assume the canvas is 1 meter wide
+        var dimensions = canvas.pixelRect;
+
+        Debug.Log(canvas.pixelRect.height);
+        var scaleFactor = canvasWidth / dimensions.width;
+        
+        canvas.GetComponent<RectTransform>().localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+        
+        Debug.Log($"Coordinates: {targetOffset / scaleFactor}, {targetSize / scaleFactor}, {peripheralOffset / scaleFactor}");
+
+        distanceFromCenter = targetOffset / scaleFactor;
+        peripheralDistractorPosition = new Vector2(-peripheralOffset / scaleFactor, 0);
+        var targetSizeInPixel = targetSize / scaleFactor;
+        label.GetComponent<RectTransform>().sizeDelta = new Vector2(targetSizeInPixel, targetSizeInPixel);
+
+        _adjustedFontSize = targetSizeInPixel;
+
+    }
+    
+
+
+    private float CalculateActualSize(float r, float alpha)
+    {
+        var radians = math.radians(alpha);
+        return math.abs(2f * r * math.tan((radians / 2f)));
     }
 
     [ContextMenu("Next Trial")]
