@@ -181,9 +181,9 @@ MonoBehaviour:
   m_EnableMouseInput: 1
   m_EnableTouchInput: 1
   m_PointAction: {fileID: 2869410428622933342, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  m_LeftClickAction: {fileID: 1855836014308820768, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  m_LeftClickAction: {fileID: -4441903561031843679, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   m_MiddleClickAction: {fileID: -6289560987278519447, guid: c348712bda248c246b8c49b3db54643f, type: 3}
-  m_RightClickAction: {fileID: -2562941478296515153, guid: c348712bda248c246b8c49b3db54643f, type: 3}
+  m_RightClickAction: {fileID: -5758763892361954021, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   m_ScrollWheelAction: {fileID: 5825226938762934180, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   m_NavigateAction: {fileID: -7967456002180160679, guid: c348712bda248c246b8c49b3db54643f, type: 3}
   m_SubmitAction: {fileID: 3994978066732806534, guid: c348712bda248c246b8c49b3db54643f, type: 3}
@@ -231,8 +231,8 @@ GameObject:
   - component: {fileID: 1429226294}
   - component: {fileID: 1429226293}
   - component: {fileID: 1429226297}
-  - component: {fileID: 1429226296}
   - component: {fileID: 1429226295}
+  - component: {fileID: 1429226298}
   m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
@@ -258,7 +258,7 @@ Canvas:
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 31
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -271,15 +271,15 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1429226292}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.3}
   m_LocalScale: {x: 0.001, y: 0.001, z: 0.001}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 964458041}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 1600}
   m_SizeDelta: {x: 150, y: 150}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1429226295
@@ -301,23 +301,6 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RaycastTriggerInteraction: 1
---- !u!114 &1429226296
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1429226292}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &1429226297
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -341,6 +324,18 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 1
+--- !u!114 &1429226298
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1429226292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2e2c2d1cbb84f6a89f54865029e5954, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1465665512
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -396,9 +391,6 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 2351505566771328526, guid: 4d7e2f87fefe0ba468719b15288b46e7, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1429226294}
     - targetCorrespondingSourceObject: {fileID: 2351505566771328526, guid: 4d7e2f87fefe0ba468719b15288b46e7, type: 3}
       insertIndex: -1
       addedObject: {fileID: 104701576}
@@ -506,12 +498,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canvas: {fileID: 1429226293}
-  label: {fileID: -7122843992435187613, guid: cf7f52186c86b8f428072cc7c8fb5046, type: 3}
+  label: {fileID: 110915391789526319, guid: c30c7916687255d45beea6056ea0bb1a, type: 3}
   numberOfDistractors: 5
-  distanceFromCenter: 150
-  distanceFromCamera: 1
-  peripheralDistractorPosition: {x: -300, y: 0}
-  peripheralDistractorFontSize: 48
+  defaultDistanceFromCamera: 1
+  canvasWidth: 5
+  targetDistractorAngleFromCenter: 5
+  peripheralDistractorAngleFromCenter: 7
+  targetDistractorViewAngle: 2
   distractorShapes:
   - groupName: Low Load
     distractorLetters: O
@@ -622,3 +615,4 @@ SceneRoots:
   - {fileID: 1465665512}
   - {fileID: 1650041646}
   - {fileID: 1740053204}
+  - {fileID: 1429226294}

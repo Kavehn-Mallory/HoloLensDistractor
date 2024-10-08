@@ -1,5 +1,4 @@
-﻿using MixedReality.Toolkit;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 public static class DistractorPlacementExtension

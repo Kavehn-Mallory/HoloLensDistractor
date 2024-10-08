@@ -137,7 +137,11 @@ PlayerSettings:
   vulkanEnableCommandBufferRecycling: 1
   loadStoreDebugModeEnabled: 0
   bundleVersion: 0.1
-  preloadedAssets: []
+  preloadedAssets:
+  - {fileID: 11400000, guid: c677e5c4eb85b7849a8da406775c299d, type: 2}
+  - {fileID: 6327818015167047793, guid: 1da8064e3cf6dc04fbe9a9bd7ed999c7, type: 2}
+  - {fileID: 11400000, guid: 4f077e890cbf2f4488e04a5fdb503945, type: 2}
+  - {fileID: -1013047162058435892, guid: f4c84da0cdec8274199c09836d6010cc, type: 2}
   metroInputSource: 0
   wsaTransparentSwapchain: 0
   m_HolographicPauseOnTrackingLoss: 1
@@ -770,11 +774,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: HoloLensDistractor
   metroPackageVersion: 1.0.0.0
-  metroCertificatePath: 
+  metroCertificatePath: Assets/WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: DefaultCompany
+  metroCertificateIssuer: DefaultCompany
+  metroCertificateNotAfter: 00d8a94da133dc01
   metroApplicationDescription: HoloLensDistractor
   wsaImages: {}
   metroTileShortName: HoloLensDistractor
@@ -792,7 +796,10 @@ PlayerSettings:
   platformCapabilities:
     WindowsStoreApps:
       GazeInput: True
+      PrivateNetworkClientServer: True
+      InternetClientServer: True
       SpatialPerception: True
+      InternetClient: True
       WebCam: True
       Microphone: True
   metroTargetDeviceFamilies: {}
