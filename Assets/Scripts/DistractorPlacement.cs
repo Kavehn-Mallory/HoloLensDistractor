@@ -1,10 +1,15 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using MixedReality.Toolkit.Input;
 using UnityEngine;
+using UnityEngine.XR.Interaction.Toolkit.UI;
+using Random = UnityEngine.Random;
 
 public class DistractorPlacement : MonoBehaviour
 {
 
     [SerializeField] private Camera mainCamera;
+    [SerializeField] private FuzzyGazeInteractor gazeInteractor;
     
     private readonly List<Vector3> _distractorPlacementPositions = new();
     private Transform _mainCameraTransform;
@@ -24,6 +29,7 @@ public class DistractorPlacement : MonoBehaviour
         }
     }
 
+    [ContextMenu("Add Position")]
     public void AddPlacementPosition()
     {
         var position = _mainCameraTransform.position + _mainCameraTransform.forward;
@@ -35,4 +41,5 @@ public class DistractorPlacement : MonoBehaviour
     {
         return _distractorPlacementPositions[Random.Range(0, _distractorPlacementPositions.Count)];
     }
+    
 }

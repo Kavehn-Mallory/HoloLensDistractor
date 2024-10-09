@@ -14,8 +14,6 @@ public class DistractorTaskManager : MonoBehaviour
     [SerializeField] private DistractorComponent label;
     [SerializeField] private int numberOfDistractors = 5;
     
-    
-    [FormerlySerializedAs("distanceFromCamera")]
     [Header("Distractor Placement Settings")]
     [SerializeField] private float defaultDistanceFromCamera = 1f;
     [SerializeField] private float canvasWidth = 1f;
@@ -40,6 +38,7 @@ public class DistractorTaskManager : MonoBehaviour
     private TMP_Text _peripheralDistractor;
     private int _targetElementIndex;
     private Camera _mainCamera;
+    private DistractorComponent _selectedDistractor;
 
 
     private void Start()
@@ -68,7 +67,6 @@ public class DistractorTaskManager : MonoBehaviour
         var peripheralDistractor = Instantiate(label, canvas.transform, false);
         peripheralDistractor.Manager = this;
         _peripheralDistractor = peripheralDistractor.GetComponent<TMP_Text>();
-        //_peripheralDistractor.rectTransform.anchoredPosition = _peripheralDistractorPosition;
         _peripheralDistractor.gameObject.name = "Peripheral Distractor";
         
         
@@ -100,13 +98,10 @@ public class DistractorTaskManager : MonoBehaviour
         
         canvas.GetComponent<RectTransform>().localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
         
-
         var distanceFromCenter = targetOffset / scaleFactor;
         var peripheralDistractorPosition = new Vector2(-peripheralOffset / scaleFactor, 0);
         var targetSizeInPixel = targetSize / scaleFactor;
 
-        
-        
         canvas.transform.SetPositionAndRotation(position, _mainCamera.transform.rotation);
 
         var angle = 360f / (numberOfDistractors + 1);
@@ -117,7 +112,6 @@ public class DistractorTaskManager : MonoBehaviour
             distractor.GetComponent<DistractorComponent>().UpdateDistractorSize(targetSizeInPixel);
             distractor.PlaceLabelsAtPosition(_mainCamera.transform, distanceFromCenter, currentAngle);
             currentAngle += angle;
-            
         }
 
         _peripheralDistractor.GetComponent<DistractorComponent>().UpdateDistractorSize(targetSizeInPixel * 2f);
@@ -184,6 +178,28 @@ public class DistractorTaskManager : MonoBehaviour
         StartNextTrial();
         
     }
+    
+    public void OnHoverEnter(UIHoverEventArgs args)
+    {
+        _selectedDistractor = args.uiObject?.GetComponent<DistractorComponent>();
+    }
+
+    public void OnHoverExit()
+    {
+        _selectedDistractor = null;
+    }
+
+    [ContextMenu("Select button")]
+    public void OnSelectionConfirmed()
+    {
+        if (_selectedDistractor)
+        {
+            Debug.Log(_selectedDistractor.distractorIndex);
+            OnButtonClicked(_selectedDistractor.distractorIndex);
+            return;
+        }
+        OnButtonClicked(-1);
+    }
 
     private void OnIncorrectButtonClicked()
     {
@@ -194,12 +210,7 @@ public class DistractorTaskManager : MonoBehaviour
     {
         Debug.Log("Correct button pressed");
     }
-
-    public void TestButtonClick()
-    {
-        Debug.Log("Button was clicked");
-    }
-
+    
 
     [Serializable]
     public struct DistractorShapeGroup
