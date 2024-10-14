@@ -5,9 +5,12 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/DistractorScene2.unity
     guid: c73c1e47346f0e943bda23d1befb6f15
+  - enabled: 1
+    path: Assets/Scenes/DebugSceneHololens.unity
+    guid: 201f534fb4fc5084eb31f3ac0a364066
   m_configObjects:
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: 4f077e890cbf2f4488e04a5fdb503945, type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: 1da8064e3cf6dc04fbe9a9bd7ed999c7, type: 2}

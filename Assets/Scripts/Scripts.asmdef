@@ -1,0 +1,28 @@
+{
+    "name": "Scripts",
+    "rootNamespace": "DistractorProject",
+    "references": [
+        "GUID:85ecd7bfcbcce8f42941a96b84c35d36",
+        "GUID:f2d49d9fa7e7eb3418e39723a7d3b92f",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:d8b63aba1907145bea998dd612889d6b",
+        "GUID:22213891bfe50254781c448a2277a9a5",
+        "GUID:3b76ab8242cc35d479edf0a949d56d59",
+        "GUID:56255bd5d851a6243b63cb370cfc40b1",
+        "GUID:fe685ec1767f73d42b749ea8045bfe43",
+        "GUID:9a9367d437335a947a847011f5575869",
+        "GUID:d59347cf3d47ac148925927618efb1b5",
+        "GUID:e0cd26848372d4e5c891c569017e11f1",
+        "GUID:2665a8d13d1b3f18800f46e256720795",
+        "GUID:676a92b0af7ae7545b54f3dfedbe274b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
