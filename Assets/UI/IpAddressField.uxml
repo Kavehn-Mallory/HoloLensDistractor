@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="Root" class="unity-base-field unity-base-text-field unity-text-field unity-base-field_inspector-field" style="flex-grow: 0; margin-top: 1px; margin-right: -2px; margin-bottom: 1px; margin-left: 3px; flex-shrink: 0;">
+        <ui:Label tabindex="-1" text="IP-Address" parse-escape-sequences="true" display-tooltip-when-elided="true" class="unity-text-element unity-base-field__label unity-base-text-field__label unity-text-field__label" style="flex-shrink: 0; flex-basis: auto; min-width: 120px; flex-direction: row;" />
+        <ui:VisualElement name="Content" style="flex-grow: 1; flex-direction: row; justify-content: flex-start;">
+            <ui:IntegerField value="255" is-delayed="true" name="IntegerField" binding-path="p0" style="flex-direction: row; flex-grow: 0; flex-shrink: 0; align-items: stretch; justify-content: flex-start; align-self: auto; margin-left: 0;" />
+            <ui:IntegerField value="255" name="IntegerField" is-delayed="true" binding-path="p1" style="flex-direction: row;" />
+            <ui:IntegerField value="255" is-delayed="true" binding-path="p2" style="flex-direction: row;" />
+            <ui:IntegerField value="255" is-delayed="true" binding-path="p3" style="flex-direction: row;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

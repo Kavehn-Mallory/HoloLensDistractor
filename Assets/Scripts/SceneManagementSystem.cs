@@ -1,5 +1,4 @@
-﻿using System;
-using Tymski;
+﻿using Tymski;
 using Unity.Collections;
 using Unity.Networking.Transport.Samples;
 using UnityEngine;
@@ -9,6 +8,8 @@ namespace DistractorProject
     public class SceneManagementSystem : MonoBehaviour
     {
 
+        
+        
         [SerializeField]
         private ServerBehaviour serverBehaviour;
         

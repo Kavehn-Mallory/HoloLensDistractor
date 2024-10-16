@@ -133,6 +133,7 @@ GameObject:
   m_Component:
   - component: {fileID: 74783322}
   - component: {fileID: 74783321}
+  - component: {fileID: 74783323}
   m_Layer: 0
   m_Name: SceneManagement
   m_TagString: Untagged
@@ -170,6 +171,26 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &74783323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 74783320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70fb20838d6d496d9853ad553780c873, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  settings:
+    endpointSource: 4
+    ipAddress:
+      p0: 255
+      p1: 255
+      p2: 255
+      p3: 255
+    port: 7777
 --- !u!1 &104701575
 GameObject:
   m_ObjectHideFlags: 0

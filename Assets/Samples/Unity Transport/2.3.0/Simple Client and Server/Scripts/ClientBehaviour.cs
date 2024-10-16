@@ -14,6 +14,8 @@ namespace Unity.Networking.Transport.Samples
         private ushort port;
 
         public TMP_Text debugText;
+        
+        //todo we write a message (turn the thing into bytes (maybe use an interface for it?)
 
         void Start()
         {
@@ -55,6 +57,7 @@ namespace Unity.Networking.Transport.Samples
                 else if (cmd == NetworkEvent.Type.Data)
                 {
                     uint value = stream.ReadUInt();
+                    
                     Debug.Log($"Got the value {value} back from the server.");
 
                     m_Connection.Disconnect(m_Driver);
