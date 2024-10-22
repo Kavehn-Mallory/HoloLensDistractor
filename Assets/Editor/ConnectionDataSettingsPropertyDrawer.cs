@@ -107,19 +107,8 @@ namespace Editor
         
         private VisualElement CreateCustomContainer(SerializedProperty property)
         {
-            var root = new VisualElement();
-            
             var ipAddressProperty = property.FindPropertyRelative(nameof(ConnectionDataSettings.ipAddress));
-
-            //todo connect ipAddress fields to actual ip Address 
-            var ipAddressField = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/UI/IpAddressField.uxml").Instantiate();
-            ipAddressField.BindProperty(ipAddressProperty);
-            root.Add(ipAddressField);
-            
-            
-            var portField = CreatePortField(property);
-            root.Add(portField);
-            return root;
+            return new PropertyField(ipAddressProperty);
         }
 
         

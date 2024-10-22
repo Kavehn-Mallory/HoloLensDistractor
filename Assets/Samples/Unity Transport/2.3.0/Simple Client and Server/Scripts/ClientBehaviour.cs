@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.InputSystem;
 
 namespace Unity.Networking.Transport.Samples
 {
@@ -20,7 +21,6 @@ namespace Unity.Networking.Transport.Samples
         void Start()
         {
             m_Driver = NetworkDriver.Create();
-            
             var endpoint = NetworkEndpoint.Parse(ipAddress, port);
             m_Connection = m_Driver.Connect(endpoint);
             debugText.text = "Trying to connect";
