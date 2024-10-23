@@ -1,6 +1,7 @@
-﻿using Tymski;
+﻿using DistractorProject.Transport;
+using DistractorProject.Transport.DataContainer;
+using Tymski;
 using Unity.Collections;
-using Unity.Networking.Transport.Samples;
 using UnityEngine;
 
 namespace DistractorProject
@@ -11,12 +12,13 @@ namespace DistractorProject
         
         
         [SerializeField]
-        private ServerBehaviour serverBehaviour;
+        private Server serverBehaviour;
         
         [SerializeField]
         private SceneReference[] sceneReferences;
 
-        
+        [SerializeField]
+        private SceneReference sceneReference;
 
 
         private void OnEnable()
@@ -29,9 +31,18 @@ namespace DistractorProject
             serverBehaviour.OnDataStreamReceived -= OnDataStreamReceived;
         }
 
-        private void OnDataStreamReceived(DataStreamReader obj)
+        private void OnDataStreamReceived(DataStreamReader reader)
         {
-            Debug.Log("Scene managment informed");
+            Debug.Log("Scene management informed");
+            var typeIndex = reader.ReadByte();
+            var type = DataSerializationIndexer.GetTypeForTypeIndex(typeIndex);
+
+            if (type == typeof(SceneChangeData))
+            {
+                var sceneRef = new SceneChangeData();
+                sceneRef.Deserialize(ref reader);
+                sceneReference = sceneRef.sceneReference;
+            }
         }
     }
 }

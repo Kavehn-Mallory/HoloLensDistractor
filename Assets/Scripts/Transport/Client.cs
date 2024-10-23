@@ -1,4 +1,5 @@
 ﻿using System;
+using DistractorProject.Core;
 using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
@@ -9,19 +10,20 @@ namespace DistractorProject.Transport
     public class Client : MonoBehaviour
     {
         [SerializeField]
-        private ConnectionDataSettings settings;
+        private ConnectionDataSettings settings = new ConnectionDataSettings
+        {
+            endpointSource = NetworkEndpointSetting.LoopbackIPv4,
+            port = new ConnectionPortProperty(7777)
+        };
         
         private NetworkDriver _driver;
         private NetworkConnection _connection;
-        
-        public InputActionReference reference;
-        public InputActionProperty reference2;
-        public ConnectionPortProperty testPort;
+        [SerializeField]
+        private Test property;
 
         private void Start()
         {
             _driver = NetworkDriver.Create();
-            
             var endpoint = settings.NetworkEndpoint;
             _connection = _driver.Connect(endpoint);
         }
@@ -62,9 +64,35 @@ namespace DistractorProject.Transport
             }
         }
 
+        public bool SendNetworkMessage(ISerializer data)
+        {
+            if (!_connection.IsCreated)
+            {
+                return false;
+            }
+
+            _driver.BeginSend(NetworkPipeline.Null, _connection, out var writer);
+            ConnectionDataWriter.SendMessage(ref writer, data);
+            _driver.EndSend(writer);
+            return true;
+        }
+
         private void ProcessData(uint value, ref DataStreamReader stream)
         {
             throw new NotImplementedException();
         }
+    }
+
+    [Serializable]
+    public struct Test
+    {
+        public int test1;
+        public Test2 test2;
+    }
+    [Serializable]
+    public struct Test2
+    {
+        public int test1;
+        public float test2;
     }
 }

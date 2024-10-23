@@ -10,13 +10,13 @@ namespace DistractorProject.Transport
         public NetworkEndpointSetting endpointSource;
         public IpAddress ipAddress;
 
-        public int port;
+        public ConnectionPortProperty port;
 
         public NetworkEndpoint NetworkEndpoint
         {
             get
             {
-                var castedPort = (ushort)port;
+                var castedPort = port.Port;
                 switch (endpointSource)
                 {
                     case NetworkEndpointSetting.Custom: 

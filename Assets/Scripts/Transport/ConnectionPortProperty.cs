@@ -19,8 +19,23 @@ namespace DistractorProject.Transport
             }
         }
 
+        public ConnectionPortProperty(ushort port)
+        {
+            this.port = port;
+            data = null;
+            useReference = false;
+        }
+
         private PortData data;
         [SerializeField]
         private ushort port;
+
+        [HideInInspector]
+        public bool useReference;
+
+        public override string ToString()
+        {
+            return Port.ToString();
+        }
     }
 }

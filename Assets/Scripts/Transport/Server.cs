@@ -1,22 +1,28 @@
-using System;
-using UnityEngine;
+﻿using System;
 using Unity.Collections;
+using Unity.Networking.Transport;
+using UnityEngine;
 
-namespace Unity.Networking.Transport.Samples
+namespace DistractorProject.Transport
 {
-    public class ServerBehaviour : MonoBehaviour
+    public class Server : MonoBehaviour
     {
         private NetworkDriver _driver;
         private NativeList<NetworkConnection> _connections;
         public Action<DataStreamReader> OnDataStreamReceived;
+
+        public ConnectionDataSettings settings = new ConnectionDataSettings
+        {
+            port = new ConnectionPortProperty(7777),
+            endpointSource = NetworkEndpointSetting.AnyIPv4
+        };
 
         private void Start()
         {
             _driver = NetworkDriver.Create();
             _connections = new NativeList<NetworkConnection>(16, Allocator.Persistent);
             
-            var endpoint = NetworkEndpoint.AnyIpv4.WithPort(7777);
-            Debug.Log(endpoint.Address);
+            var endpoint = settings.NetworkEndpoint;
             if (_driver.Bind(endpoint) != 0)
             {
                 Debug.LogError("Failed to bind to port 7777.");
@@ -75,5 +81,4 @@ namespace Unity.Networking.Transport.Samples
             }
         }
     }
-    
 }

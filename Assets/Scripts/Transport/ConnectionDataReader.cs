@@ -6,31 +6,33 @@ namespace DistractorProject.Transport
 {
     public struct ConnectionDataReader
     {
-        private DataStreamReader _reader;
-        
-        public ConnectionDataReader(ref DataStreamReader reader)
+        public static string ReadFixedString(ref DataStreamReader reader)
         {
-            _reader = reader;
-        }
-        
-        
-        public void OnMessageReceived(ref DataStreamReader reader)
-        {
-            Type dataType = GetDataType(reader.ReadByte());
-            
-            
+            var fixedStringType = reader.ReadByte();
+
+            switch (fixedStringType)
+            {
+                case 0: return reader.ReadFixedString32().ToString();
+                case 1: return reader.ReadFixedString64().ToString();
+                case 2: return reader.ReadFixedString128().ToString();
+                case 3: return reader.ReadFixedString512().ToString();
+                case 4: return reader.ReadFixedString4096().ToString();
+            }
+            throw new ArgumentException($"The reader does not contain a fixed string that was sent by {nameof(ConnectionDataWriter.WriteString)}"); 
         }
 
-        public T GetDataAsSerializableType<T>() where T : ISerializer, new()
+        public static bool TryReadFixedString(ref DataStreamReader reader, out string data)
         {
-            var element = new T();
-            element.Deserialize(ref _reader);
-            return element;
-        }
-
-        private static Type GetDataType(byte typeIndex)
-        {
-            return DataSerializationIndexer.GetTypeForTypeIndex(typeIndex);
+            try
+            {
+                data = ReadFixedString(ref reader);
+                return true;
+            }
+            catch
+            {
+                data = "";
+                return false;
+            }
         }
     }
 }

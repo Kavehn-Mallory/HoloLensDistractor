@@ -4,7 +4,7 @@ namespace DistractorProject.Core
 {
     public interface ISerializer
     {
-        public void Serialize(ref DataStreamWriter dataStreamWriter);
+        public void Serialize(ref DataStreamWriter writer);
         
         public void Deserialize(ref DataStreamReader dataStreamReader);
     }

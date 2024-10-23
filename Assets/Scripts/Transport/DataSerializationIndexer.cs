@@ -2,6 +2,7 @@
 using System.Linq;
 using DistractorProject.Core;
 using UnityEditor;
+using UnityEngine;
 
 namespace DistractorProject.Transport
 {
@@ -10,6 +11,7 @@ namespace DistractorProject.Transport
         private static Type[] _typeIndices = Array.Empty<Type>();
 
 
+        [RuntimeInitializeOnLoadMethod]
         public static void CalculateTypeIndices()
         {
             var types = TypeCache.GetTypesDerivedFrom<ISerializer>().ToList();
@@ -38,7 +40,6 @@ namespace DistractorProject.Transport
                     return (byte)i;
                 }
             }
-
             //zero is associated with "null" instead of a type, indicating that the type does not exist
             return 0;
         }

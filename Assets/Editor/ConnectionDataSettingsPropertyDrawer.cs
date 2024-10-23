@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using DistractorProject.Transport;
 using UnityEditor;
 using UnityEditor.UIElements;
+using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Editor
@@ -14,6 +16,7 @@ namespace Editor
         private VisualTreeAsset _rootAsset;
         private VisualElement _contentContainer;
         private VisualElement[] _contentElements;
+        private VisualElement _hiddenContainer;
         
         public override VisualElement CreatePropertyGUI(SerializedProperty property)
         {
@@ -22,39 +25,47 @@ namespace Editor
                 _rootAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(RootElementPath);
             }
             
+            
             var rootElement = _rootAsset.Instantiate();
+
+            rootElement.BindProperty(property);
+            
             var enumField = rootElement.Q<EnumField>();
             enumField.Init(NetworkEndpointSetting.AnyIPv4);
-            
-
+            _contentContainer = rootElement.Q<VisualElement>("ContentArea");
+            _hiddenContainer = rootElement.Q<VisualElement>("HiddenContainer");
+            _contentContainer.Add(_hiddenContainer);
+            CreateContentContainers(property);
             var networkEndpointSetting = property.FindPropertyRelative(nameof(ConnectionDataSettings.endpointSource));
-            enumField.bindingPath = nameof(ConnectionDataSettings.endpointSource);
+            //enumField.bindingPath = nameof(ConnectionDataSettings.endpointSource);
             enumField.BindProperty(networkEndpointSetting);
-            enumField.RegisterValueChangedCallback(OnNetworkEndpointSettingsChanged);
+            enumField.RegisterValueChangedCallback((e) => OnNetworkEndpointSettingsChanged(e, property));
             enumField.value = (NetworkEndpointSetting)networkEndpointSetting.enumValueIndex;
 
-            _contentContainer = rootElement.Q<VisualElement>("ContentArea");
-            _contentElements = CreateContentContainers(property);
+
+            
             
             //var enumValue = enumField.value is NetworkEndpointSetting value ? value : NetworkEndpointSetting.AnyIPv4;
             var chosenContainer = _contentElements[networkEndpointSetting.enumValueIndex];
-
-            _contentContainer.Add(chosenContainer);
+            chosenContainer.RemoveFromHierarchy();
+            _contentContainer.Insert(0, chosenContainer);
             
-            
+            var foldout = rootElement.Q<Foldout>("Root");
+            foldout.text = property.displayName;
             
             return rootElement;
         }
-        private VisualElement[] CreateContentContainers(SerializedProperty property)
+        private void CreateContentContainers(SerializedProperty property)
         {
             var enumNames = Enum.GetNames(typeof(NetworkEndpointSetting));
-            var result = new VisualElement[enumNames.Length];
+            _contentElements = new VisualElement[enumNames.Length];
 
-            for (int i = 0; i < result.Length; i++)
+            for (int i = 0; i < _contentElements.Length; i++)
             {
-                result[i] = CreateContentContainerForEnumData(enumNames[i], property);
+                var container = CreateContentContainerForEnumData(enumNames[i], property);
+                _contentElements[i] = container;
+                _hiddenContainer.Add(container);
             }
-            return result;
         }
 
         private VisualElement CreateContentContainerForEnumData(string enumName, SerializedProperty property)
@@ -68,6 +79,7 @@ namespace Editor
                 case nameof(NetworkEndpointSetting.Custom): return CreateCustomContainer(property);
             }
 
+            Debug.LogWarning("We went out of range");
             return new VisualElement();
         }
 
@@ -78,15 +90,10 @@ namespace Editor
             return CreatePortField(property);
         }
 
-        private static IntegerField CreatePortField(SerializedProperty property)
+        private static PropertyField CreatePortField(SerializedProperty property)
         {
             var portProperty = property.FindPropertyRelative(nameof(ConnectionDataSettings.port));
-            var portField = new IntegerField("Port")
-            {
-                bindingPath = nameof(ConnectionDataSettings.port)
-            };
-            portField.maxLength = 4;
-            portField.BindProperty(portProperty);
+            var portField = new PropertyField(portProperty);
             return portField;
         }
         
@@ -108,19 +115,35 @@ namespace Editor
         private VisualElement CreateCustomContainer(SerializedProperty property)
         {
             var ipAddressProperty = property.FindPropertyRelative(nameof(ConnectionDataSettings.ipAddress));
-            return new PropertyField(ipAddressProperty);
+            var portContainer = CreatePortField(property);
+
+            var data = new VisualElement();
+            data.Add(new PropertyField(ipAddressProperty));
+            data.Add(portContainer);
+            return data;
         }
 
         
 
-        private void OnNetworkEndpointSettingsChanged(ChangeEvent<Enum> evt)
+        private void OnNetworkEndpointSettingsChanged(ChangeEvent<Enum> evt, SerializedProperty property)
         {
-            if (evt.newValue is not NetworkEndpointSetting setting)
+            if (evt.newValue is not NetworkEndpointSetting setting || evt.previousValue is not NetworkEndpointSetting old)
             {
                 return;
             }
-            _contentContainer.Clear();
-            _contentContainer.Add(_contentElements[(int)setting]);
+
+            if (setting == old)
+            {
+                return;
+            }
+
+            var oldContainer = _contentElements[(int)old];
+            oldContainer.RemoveFromHierarchy();
+            _hiddenContainer.Add(oldContainer);
+            var newContainer = _contentElements[(int)setting];
+            newContainer.RemoveFromHierarchy();
+            _contentContainer.Insert(0, newContainer);
+            
         }
     }
 }
