@@ -3,14 +3,13 @@ using DistractorProject.Core;
 using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace DistractorProject.Transport
 {
     public class Client : MonoBehaviour
     {
         [SerializeField]
-        private ConnectionDataSettings settings = new ConnectionDataSettings
+        private ConnectionDataSettings settings = new()
         {
             endpointSource = NetworkEndpointSetting.LoopbackIPv4,
             port = new ConnectionPortProperty(7777)
@@ -18,8 +17,6 @@ namespace DistractorProject.Transport
         
         private NetworkDriver _driver;
         private NetworkConnection _connection;
-        [SerializeField]
-        private Test property;
 
         private void Start()
         {
@@ -83,16 +80,4 @@ namespace DistractorProject.Transport
         }
     }
 
-    [Serializable]
-    public struct Test
-    {
-        public int test1;
-        public Test2 test2;
-    }
-    [Serializable]
-    public struct Test2
-    {
-        public int test1;
-        public float test2;
-    }
 }

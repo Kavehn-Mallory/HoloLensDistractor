@@ -9,9 +9,9 @@ namespace DistractorProject.Transport
     {
         private NetworkDriver _driver;
         private NativeList<NetworkConnection> _connections;
-        public Action<DataStreamReader> OnDataStreamReceived;
+        public Action<DataStreamReader> OnDataStreamReceived = delegate { };
 
-        public ConnectionDataSettings settings = new ConnectionDataSettings
+        public ConnectionDataSettings settings = new()
         {
             port = new ConnectionPortProperty(7777),
             endpointSource = NetworkEndpointSetting.AnyIPv4
@@ -69,7 +69,7 @@ namespace DistractorProject.Transport
                 {
                     if (cmd == NetworkEvent.Type.Data)
                     {
-                        OnDataStreamReceived?.Invoke(stream);
+                        OnDataStreamReceived.Invoke(stream);
                     }
                     else if (cmd == NetworkEvent.Type.Disconnect)
                     {

@@ -1,26 +1,32 @@
-﻿using DistractorProject.Transport;
+﻿using System;
+using System.Threading.Tasks;
+using DistractorProject.SceneManagement;
+using DistractorProject.Transport;
 using DistractorProject.Transport.DataContainer;
-using Tymski;
+using Eflatun.SceneReference;
 using Unity.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace DistractorProject
 {
     public class SceneManagementSystem : MonoBehaviour
     {
-
         
         
         [SerializeField]
         private Server serverBehaviour;
         
-        [SerializeField]
-        private SceneReference[] sceneReferences;
+       
 
         [SerializeField]
         private SceneReference sceneReference;
 
+        
+        
 
+
+      
         private void OnEnable()
         {
             serverBehaviour.OnDataStreamReceived += OnDataStreamReceived;
