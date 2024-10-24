@@ -19,7 +19,7 @@ namespace DistractorProject.SceneManagement
             await LoadSceneGroup(0);
         }
         
-        private async Task LoadSceneGroup(int index)
+        public async Task LoadSceneGroup(int index)
         {
             targetProgress = 1f;
             if (index < 0 || index >= sceneGroups.Length)

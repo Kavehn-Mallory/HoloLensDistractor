@@ -153,10 +153,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serverBehaviour: {fileID: 460842230}
-  sceneReferences: []
   sceneReference:
     asset: {fileID: 0}
     guid: 00000000000000000000000000000000
+  sceneLoader: {fileID: 0}
 --- !u!4 &304941995
 Transform:
   m_ObjectHideFlags: 0
@@ -262,9 +262,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 733815d454534ae6944f69b48ed99e62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneReference:
-    asset: {fileID: 102900000, guid: c73c1e47346f0e943bda23d1befb6f15, type: 3}
-    guid: c73c1e47346f0e943bda23d1befb6f15
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

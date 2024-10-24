@@ -13,21 +13,19 @@ namespace DistractorProject
     {
         
         private Client _clientBehaviour;
-        [SerializeField]
-        private SceneReference sceneReference;
 
         private void Awake()
         {
             _clientBehaviour = GetComponent<Client>();
             //idea: maybe have a scriptable object that manages all the data, then we only need to send data that points to a certain scene setup? 
         }
-
-        [ContextMenu("Send scene change")]
-        public void SendSceneChange()
+        
+        [ContextMenu("Change to low scene")]
+        public void ChangeToLowScene()
         {
-            var messageData = new SceneChangeData
+            var messageData = new SceneGroupChangeData
             {
-                sceneReference = sceneReference
+                index = 1
             };
             if (_clientBehaviour.SendNetworkMessage(messageData))
             {
@@ -35,6 +33,23 @@ namespace DistractorProject
                 return;
             }
             Debug.Log("Message could not be sent");
+            
+        }
+        
+        [ContextMenu("Change to high scene")]
+        public void ChangeToHighScene()
+        {
+            var messageData = new SceneGroupChangeData
+            {
+                index = 2
+            };
+            if (_clientBehaviour.SendNetworkMessage(messageData))
+            {
+                Debug.Log("Message sent successful");
+                return;
+            }
+            Debug.Log("Message could not be sent");
+            
         }
     }
 }

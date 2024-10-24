@@ -200,9 +200,21 @@ MonoBehaviour:
   - groupName: Default
     scenes:
     - reference:
-        asset: {fileID: 102900000, guid: c73c1e47346f0e943bda23d1befb6f15, type: 3}
-        guid: c73c1e47346f0e943bda23d1befb6f15
+        asset: {fileID: 102900000, guid: 65a285bc9da654644b0b8e2bca1a5f2e, type: 3}
+        guid: 65a285bc9da654644b0b8e2bca1a5f2e
       sceneType: 0
+  - groupName: Low
+    scenes:
+    - reference:
+        asset: {fileID: 102900000, guid: 449d1731489693b4c822797c28392fca, type: 3}
+        guid: 449d1731489693b4c822797c28392fca
+      sceneType: 5
+  - groupName: High
+    scenes:
+    - reference:
+        asset: {fileID: 102900000, guid: da11da0a81b1ff04c8508e9d21cdfeca, type: 3}
+        guid: da11da0a81b1ff04c8508e9d21cdfeca
+      sceneType: 5
   targetProgress: 0
 --- !u!4 &1621033333
 Transform:

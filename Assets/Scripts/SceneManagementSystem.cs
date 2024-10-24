@@ -1,35 +1,26 @@
-﻿using System;
-using System.Threading.Tasks;
-using DistractorProject.SceneManagement;
+﻿using DistractorProject.SceneManagement;
 using DistractorProject.Transport;
 using DistractorProject.Transport.DataContainer;
 using Eflatun.SceneReference;
 using Unity.Collections;
-using Unity.Mathematics;
 using UnityEngine;
 
 namespace DistractorProject
 {
     public class SceneManagementSystem : MonoBehaviour
     {
-        
-        
         [SerializeField]
         private Server serverBehaviour;
         
-       
-
         [SerializeField]
         private SceneReference sceneReference;
 
-        
-        
-
-
-      
+        [SerializeField]
+        private SceneLoader sceneLoader;
         private void OnEnable()
         {
             serverBehaviour.OnDataStreamReceived += OnDataStreamReceived;
+            sceneLoader = FindObjectOfType<SceneLoader>();
         }
 
         private void OnDisable()
@@ -48,6 +39,12 @@ namespace DistractorProject
                 var sceneRef = new SceneChangeData();
                 sceneRef.Deserialize(ref reader);
                 sceneReference = sceneRef.sceneReference;
+            }
+            else if (type == typeof(SceneGroupChangeData))
+            {
+                var sceneGroup = new SceneGroupChangeData();
+                sceneGroup.Deserialize(ref reader);
+                sceneLoader?.LoadSceneGroup(sceneGroup.index);
             }
         }
     }
