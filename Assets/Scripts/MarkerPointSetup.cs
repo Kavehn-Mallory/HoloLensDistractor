@@ -1,4 +1,6 @@
 ﻿using System;
+using DistractorProject.Transport;
+using DistractorProject.Transport.DataContainer;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
@@ -12,6 +14,10 @@ namespace DistractorProject
         [SerializeField] private Image marker;
 
         private Image[] _markerPoints = Array.Empty<Image>();
+        private int _currentMarker;
+
+        public Action OnMarkerSetupComplete = delegate { };
+        
         private void Awake()
         {
             markerPointCanvas.enabled = false;
@@ -40,12 +46,43 @@ namespace DistractorProject
 
         public void StartMarkerPointSetup()
         {
-            
+            Server.Instance.RegisterCallback<ConfirmationData>(OnPointSelectionConfirmed);
+            _markerPoints[0].enabled = true;
+            Server.Instance.SendNetworkMessage(new MarkerCountData
+            {
+                markerCount = MarkerPointCount
+            });
+        }
+
+        private void ActivateMarker()
+        {
+            _markerPoints[_currentMarker].enabled = false;
+            _currentMarker++;
+            _markerPoints[_currentMarker].enabled = true;
+        }
+
+        private void OnPointSelectionConfirmed(ConfirmationData data)
+        {
+            if (data.confirmationNumber != _currentMarker)
+            {
+                //todo throw error
+            }
+
+            if (_currentMarker >= _markerPoints.Length)
+            {
+                EndMarkerPointSetup();
+                return;
+            }
+            ActivateMarker();
+            Server.Instance.SendNetworkMessage(new ConfirmationData
+            {
+                confirmationNumber = _currentMarker
+            });
         }
 
         public void EndMarkerPointSetup()
         {
-            
+            Server.Instance.UnregisterCallback<ConfirmationData>(OnPointSelectionConfirmed);
         }
     }
 }

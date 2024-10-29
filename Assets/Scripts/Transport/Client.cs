@@ -27,9 +27,15 @@ namespace DistractorProject.Transport
         public void UnregisterCallback<T>(Action<T> callback) where T : ISerializer, new() =>
             _eventHandler.UnregisterCallback(callback);
 
+        protected override void Awake()
+        {
+            base.Awake();
+            _eventHandler = new NetworkMessageEventHandler();
+        }
+
         private void Start()
         {
-            _eventHandler = new NetworkMessageEventHandler();
+            
             _driver = NetworkDriver.Create();
             var endpoint = settings.NetworkEndpoint;
             _connection = _driver.Connect(endpoint);

@@ -18,6 +18,14 @@ namespace DistractorProject.Transport
             port = new ConnectionPortProperty(7777),
             endpointSource = NetworkEndpointSetting.AnyIPv4
         };
+        
+        private NetworkMessageEventHandler _eventHandler;
+        
+        protected override void Awake()
+        {
+            base.Awake();
+            _eventHandler = new NetworkMessageEventHandler();
+        }
 
         private void Start()
         {
@@ -32,6 +40,12 @@ namespace DistractorProject.Transport
             }
             _driver.Listen();
         }
+        
+        public void RegisterCallback<T>(Action<T> callback) where T : ISerializer, new() =>
+            _eventHandler.RegisterCallback(callback);
+
+        public void UnregisterCallback<T>(Action<T> callback) where T : ISerializer, new() =>
+            _eventHandler.UnregisterCallback(callback);
 
         private void OnDestroy()
         {
