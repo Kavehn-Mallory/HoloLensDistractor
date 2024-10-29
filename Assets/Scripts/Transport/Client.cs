@@ -1,12 +1,13 @@
 ﻿using System;
 using DistractorProject.Core;
+using DistractorProject.Transport.DataContainer;
 using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
 
 namespace DistractorProject.Transport
 {
-    public class Client : MonoBehaviour
+    public class Client : Singleton<Client>
     {
         [SerializeField]
         private ConnectionDataSettings settings = new()
@@ -18,12 +19,22 @@ namespace DistractorProject.Transport
         private NetworkDriver _driver;
         private NetworkConnection _connection;
 
+        private NetworkMessageEventHandler _eventHandler;
+
+        public void RegisterCallback<T>(Action<T> callback) where T : ISerializer, new() =>
+            _eventHandler.RegisterCallback(callback);
+
+        public void UnregisterCallback<T>(Action<T> callback) where T : ISerializer, new() =>
+            _eventHandler.UnregisterCallback(callback);
+
         private void Start()
         {
+            _eventHandler = new NetworkMessageEventHandler();
             _driver = NetworkDriver.Create();
             var endpoint = settings.NetworkEndpoint;
             _connection = _driver.Connect(endpoint);
         }
+        
 
         private void OnDestroy()
         {
@@ -48,10 +59,7 @@ namespace DistractorProject.Transport
                 }
                 else if (cmd == NetworkEvent.Type.Data)
                 {
-                    uint value = stream.ReadUInt();
-                    
-                    Debug.Log($"Got the value {value} back from the server.");
-                    ProcessData(value, ref stream);
+                    ProcessData(ref stream);
                 }
                 else if (cmd == NetworkEvent.Type.Disconnect)
                 {
@@ -74,10 +82,18 @@ namespace DistractorProject.Transport
             return true;
         }
 
-        private void ProcessData(uint value, ref DataStreamReader stream)
+        private void ProcessData(ref DataStreamReader stream)
         {
-            throw new NotImplementedException();
+            var typeIndex = stream.ReadByte();
+            var type = DataSerializationIndexer.GetTypeForTypeIndex(typeIndex);
+
+            if (!_eventHandler.TriggerCallback(type, ref stream))
+            {
+                Debug.LogError($"Type {type} is not handled yet by {nameof(NetworkMessageEventHandler)}. This either means that {type} does not implement {nameof(ISerializer)} or that the type does not have a default constructor");
+            }
         }
+
+        
     }
 
 }

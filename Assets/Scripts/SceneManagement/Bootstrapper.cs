@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
+using DistractorProject.Core;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace DistractorProject.SceneManagement
 {
-    public class Bootstrapper : MonoBehaviour
+    public class Bootstrapper : PersistentSingleton<Bootstrapper>
     {
         private static bool _loadBootstrapper;
 
@@ -50,7 +51,7 @@ namespace DistractorProject.SceneManagement
 
             }*/
 
-
+            
             if (bootstrapperLoadOperation == null)
             {
                 return;

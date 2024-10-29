@@ -1,25 +1,24 @@
 ﻿using System;
 using DistractorProject.Core;
-using Eflatun.SceneReference;
 using Unity.Collections;
-using UnityEngine;
 
 namespace DistractorProject.Transport.DataContainer
 {
     [Serializable]
-    public struct SceneChangeData : ISerializer
+    public struct SceneInformationData : ISerializer
     {
-
-        public SceneReference sceneReference;
+        //todo fill out the data
+        
+        
         
         public void Serialize(ref DataStreamWriter writer)
         {
-            ConnectionDataWriter.WriteString(ref writer, sceneReference.Guid);
+            throw new NotImplementedException();
         }
 
         public void Deserialize(ref DataStreamReader dataStreamReader)
         {
-            sceneReference = new SceneReference(ConnectionDataReader.ReadFixedString(ref dataStreamReader));
+            throw new NotImplementedException();
         }
     }
 }

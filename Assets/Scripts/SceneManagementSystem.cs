@@ -9,8 +9,6 @@ namespace DistractorProject
 {
     public class SceneManagementSystem : MonoBehaviour
     {
-        [SerializeField]
-        private Server serverBehaviour;
         
         [SerializeField]
         private SceneReference sceneReference;
@@ -19,18 +17,17 @@ namespace DistractorProject
         private SceneLoader sceneLoader;
         private void OnEnable()
         {
-            serverBehaviour.OnDataStreamReceived += OnDataStreamReceived;
+            Server.Instance.OnDataStreamReceived += OnDataStreamReceived;
             sceneLoader = FindObjectOfType<SceneLoader>();
         }
 
         private void OnDisable()
         {
-            serverBehaviour.OnDataStreamReceived -= OnDataStreamReceived;
+            Server.Instance.OnDataStreamReceived -= OnDataStreamReceived;
         }
 
         private void OnDataStreamReceived(DataStreamReader reader)
         {
-            Debug.Log("Scene management informed");
             var typeIndex = reader.ReadByte();
             var type = DataSerializationIndexer.GetTypeForTypeIndex(typeIndex);
 
@@ -45,6 +42,12 @@ namespace DistractorProject
                 var sceneGroup = new SceneGroupChangeData();
                 sceneGroup.Deserialize(ref reader);
                 sceneLoader?.LoadSceneGroup(sceneGroup.index);
+            }
+            else if (type == typeof(ConfirmationData))
+            {
+                var confirmationData = new ConfirmationData();
+                confirmationData.Deserialize(ref reader);
+                //todo add functionality
             }
         }
     }

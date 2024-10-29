@@ -1,11 +1,13 @@
 ﻿using System;
+using DistractorProject.Core;
+using DistractorProject.Transport.DataContainer;
 using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
 
 namespace DistractorProject.Transport
 {
-    public class Server : MonoBehaviour
+    public class Server : Singleton<Server>
     {
         private NetworkDriver _driver;
         private NativeList<NetworkConnection> _connections;
@@ -59,6 +61,10 @@ namespace DistractorProject.Transport
             while ((c = _driver.Accept()) != default)
             {
                 _connections.Add(c);
+                SendNetworkMessage(new MarkerCountData
+                {
+                    markerCount = 10
+                });
                 Debug.Log("Accepted a connection.");
             }
 
@@ -79,6 +85,18 @@ namespace DistractorProject.Transport
                     }
                 }
             }
+        }
+        
+        public void SendNetworkMessage(ISerializer data)
+        {
+            foreach (var connection in _connections)
+            {
+                _driver.BeginSend(NetworkPipeline.Null, connection, out var writer);
+                ConnectionDataWriter.SendMessage(ref writer, data);
+                _driver.EndSend(writer);
+            }
+
+            
         }
     }
 }
