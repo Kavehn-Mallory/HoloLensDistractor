@@ -5,7 +5,12 @@ namespace DistractorProject.Core {
         protected static T instance;
 
         public static bool HasInstance => instance != null;
-        public static T TryGetInstance() => HasInstance ? instance : null;
+
+        public static bool TryGetInstance(out T nullableInstance)
+        {
+            nullableInstance = instance;
+            return nullableInstance != null;
+        }
 
         public static T Instance {
             get {
@@ -28,7 +33,7 @@ namespace DistractorProject.Core {
             InitializeSingleton();
         }
 
-        protected virtual void InitializeSingleton() {
+        private void InitializeSingleton() {
             if (!Application.isPlaying) return;
 
             instance = this as T;

@@ -152,7 +152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 03894d4586e44858ba6c92153af083be, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  serverBehaviour: {fileID: 460842230}
   sceneReference:
     asset: {fileID: 0}
     guid: 00000000000000000000000000000000

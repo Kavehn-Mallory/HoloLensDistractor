@@ -1,8 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using DistractorProject.Core;
 using Unity.Collections;
+
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
+
 using UnityEngine;
 
 namespace DistractorProject.Transport
@@ -15,9 +20,7 @@ namespace DistractorProject.Transport
 
         public NetworkMessageEventHandler()
         {
-            //todo make this work in the build. It currently won't due to the fact that it relies on editor code 
-            //todo maybe look if we can cache this just into strings or something and then lookup inside the build? would be fine by me tbh 
-            var serializableData = TypeCache.GetTypesDerivedFrom<ISerializer>().Where(s => s.IsValueType || s.GetConstructor(Type.EmptyTypes) != null).ToList();
+            var serializableData = GetSerializableTypes();
             _invocationHelper = new IInvoker[serializableData.Count];
             Debug.Log(_invocationHelper.Length);
             for (var i = 0; i < serializableData.Count; i++)
@@ -26,8 +29,30 @@ namespace DistractorProject.Transport
                 var invoker = typeof(InvocationHelper<>).MakeGenericType(data);
 
                 _invocationHelper[i] = (IInvoker)Activator.CreateInstance(invoker);
+                
             }
         }
+
+        private List<Type> GetSerializableTypes()
+        {
+            
+#if UNITY_EDITOR
+            return TypeCache.GetTypesDerivedFrom<ISerializer>().Where(s => s.IsValueType || s.GetConstructor(Type.EmptyTypes) != null).ToList();
+#else
+            var result = new List<Type>();
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            foreach (var assembly in assemblies)
+            {
+                result.AddRange(assembly.GetTypes().Where(t =>
+                    (t.IsValueType || t.GetConstructor(Type.EmptyTypes) != null) &&
+                    typeof(ISerializer).IsAssignableFrom(t)));
+            }
+
+            return result;
+#endif
+            
+        }
+        
 
 
         

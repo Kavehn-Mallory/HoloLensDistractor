@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using DistractorProject.Transport;
+using DistractorProject.Transport.DataContainer;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -19,6 +22,25 @@ namespace DistractorProject.SceneManagement
             await LoadSceneGroup(0);
         }
         
+        private void OnEnable()
+        {
+            Server.Instance.RegisterCallback<SceneGroupChangeData>(OnSceneGroupChangeRequest);
+        }
+
+        private void OnDisable()
+        {
+            if (Server.TryGetInstance(out var instance))
+            {
+                instance.UnregisterCallback<SceneGroupChangeData>(OnSceneGroupChangeRequest);
+            }
+            
+        }
+
+        private async void OnSceneGroupChangeRequest(SceneGroupChangeData data)
+        {
+            await LoadSceneGroup(data.index);
+        }
+        
         public async Task LoadSceneGroup(int index)
         {
             targetProgress = 1f;
@@ -32,6 +54,21 @@ namespace DistractorProject.SceneManagement
             progress.Progressed += target => targetProgress = math.max(target, targetProgress);
 
             await Manager.LoadScenes(sceneGroups[index], progress);
+        }
+
+        public int[] FindUserStudyScenes()
+        {
+            var results = new List<int>();
+            for (var i = 0; i < sceneGroups.Length; i++)
+            {
+                var sceneGroup = sceneGroups[i];
+                if (sceneGroup.ContainsScenesWithType(SceneType.UserStudy))
+                {
+                    results.Add(i);
+                }
+            }
+
+            return results.ToArray();
         }
 
 

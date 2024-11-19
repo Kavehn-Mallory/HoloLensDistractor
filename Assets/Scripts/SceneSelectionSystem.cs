@@ -18,7 +18,7 @@ namespace DistractorProject
             {
                 index = 1
             };
-            if (Client.Instance.SendNetworkMessage(messageData))
+            if (Client.Instance.TransmitNetworkMessage(messageData))
             {
                 Debug.Log("Message sent successful");
                 return;
@@ -34,7 +34,7 @@ namespace DistractorProject
             {
                 index = 2
             };
-            if (Client.Instance.SendNetworkMessage(messageData))
+            if (Client.Instance.TransmitNetworkMessage(messageData))
             {
                 Debug.Log("Message sent successful");
                 return;

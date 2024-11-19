@@ -1,17 +1,15 @@
 ﻿using System;
 using DistractorProject.Core;
-using DistractorProject.Transport.DataContainer;
 using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
 
 namespace DistractorProject.Transport
 {
-    public class Server : Singleton<Server>
+    public class Server : Singleton<Server>, INetworkManager
     {
         private NetworkDriver _driver;
         private NativeList<NetworkConnection> _connections;
-        public Action<DataStreamReader> OnDataStreamReceived = delegate { };
 
         public ConnectionDataSettings settings = new()
         {
@@ -20,7 +18,8 @@ namespace DistractorProject.Transport
         };
         
         private NetworkMessageEventHandler _eventHandler;
-        
+        private NetworkPipeline _pipeline;
+
         protected override void Awake()
         {
             base.Awake();
@@ -30,6 +29,7 @@ namespace DistractorProject.Transport
         private void Start()
         {
             _driver = NetworkDriver.Create();
+            _pipeline = PipelineCreation.CreatePipeline(ref _driver);
             _connections = new NativeList<NetworkConnection>(16, Allocator.Persistent);
             
             var endpoint = settings.NetworkEndpoint;
@@ -75,10 +75,7 @@ namespace DistractorProject.Transport
             while ((c = _driver.Accept()) != default)
             {
                 _connections.Add(c);
-                SendNetworkMessage(new MarkerCountData
-                {
-                    markerCount = 10
-                });
+                //todo -> turn this into an event 
                 Debug.Log("Accepted a connection.");
             }
 
@@ -89,7 +86,7 @@ namespace DistractorProject.Transport
                 {
                     if (cmd == NetworkEvent.Type.Data)
                     {
-                        OnDataStreamReceived.Invoke(stream);
+                        ProcessData(ref stream);
                     }
                     else if (cmd == NetworkEvent.Type.Disconnect)
                     {
@@ -101,16 +98,32 @@ namespace DistractorProject.Transport
             }
         }
         
-        public void SendNetworkMessage(ISerializer data)
+        public bool TransmitNetworkMessage(ISerializer data)
         {
+            bool success = true;
             foreach (var connection in _connections)
             {
-                _driver.BeginSend(NetworkPipeline.Null, connection, out var writer);
+                if (!connection.IsCreated)
+                {
+                    success = false;
+                    continue;
+                }
+                _driver.BeginSend(_pipeline, connection, out var writer);
                 ConnectionDataWriter.SendMessage(ref writer, data);
                 _driver.EndSend(writer);
             }
+            return success;
+        }
+        
+        private void ProcessData(ref DataStreamReader stream)
+        {
+            var typeIndex = stream.ReadByte();
+            var type = DataSerializationIndexer.GetTypeForTypeIndex(typeIndex);
 
-            
+            if (!_eventHandler.TriggerCallback(type, ref stream))
+            {
+                Debug.LogError($"Type {type} is not handled yet by {nameof(NetworkMessageEventHandler)}. This either means that {type} does not implement {nameof(ISerializer)} or that the type does not have a default constructor");
+            }
         }
     }
 }

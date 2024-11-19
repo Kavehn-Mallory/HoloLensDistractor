@@ -14,11 +14,16 @@ namespace DistractorProject.SceneManagement
         {
             return scenes.FirstOrDefault(scene => scene.sceneType == sceneType)?.reference.Name;
         }
+
+        public bool ContainsScenesWithType(SceneType sceneType)
+        {
+            return scenes.FirstOrDefault(scene => scene.sceneType == sceneType) != null;
+        }
     }
 
     
     
-    public enum SceneType {ActiveScene, MainMenu, UserInterface, HUD, Cinematic, Environment, Tooling}
+    public enum SceneType {ActiveScene, MainMenu, UserInterface, HUD, Cinematic, Environment, Tooling, UserStudy}
     [Serializable]
     public class SceneData
     {

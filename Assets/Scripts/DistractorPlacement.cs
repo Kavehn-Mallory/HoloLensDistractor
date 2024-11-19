@@ -37,15 +37,13 @@ namespace DistractorProject
             
             //todo register to client 
         }
+        
 
-        private void Start()
+        private void StartMarkerPlacement()
         {
-            Client.Instance.RegisterCallback<MarkerCountData>(StartMarkerPlacement);
-        }
-
-        private void StartMarkerPlacement(MarkerCountData obj)
-        {
-            throw new NotImplementedException();
+            _acceptInput = true;
+            _currentMarkerPoint = 0;
+            //todo display counter and tell the user what to do 
         }
 
 
@@ -56,10 +54,12 @@ namespace DistractorProject
             {
                 return;
             }
+
+            _acceptInput = false;
             var position = _mainCameraTransform.position + _mainCameraTransform.forward;
         
             _distractorPlacementPositions.Add(position);
-            Client.Instance.SendNetworkMessage(new ConfirmationData
+            Client.Instance.TransmitNetworkMessage(new ConfirmationData
             {
                 confirmationNumber = _currentMarkerPoint
             });
@@ -74,12 +74,22 @@ namespace DistractorProject
         public void OnConfirmationDataReceived(ConfirmationData confirmationData)
         {
             _currentMarkerPoint = confirmationData.confirmationNumber;
+            _acceptInput = true;
         }
 
         public void OnMarkerCountDataReceived(MarkerCountData markerCountData)
         {
             _markerPointCount = markerCountData.markerCount;
+            Client.Instance.UnregisterCallback<MarkerCountData>(OnMarkerCountDataReceived);
+            Client.Instance.RegisterCallback<ConfirmationData>(OnConfirmationDataReceived);
+            Client.Instance.RegisterCallback<MarkerSetupEndData>(OnMarkerPointSetupCompleted);
+            StartMarkerPlacement();
         }
-    
+
+        private void OnMarkerPointSetupCompleted(MarkerSetupEndData obj)
+        {
+            Client.Instance.UnregisterCallback<MarkerSetupEndData>(OnMarkerPointSetupCompleted);
+            _acceptInput = false;
+        }
     }
 }

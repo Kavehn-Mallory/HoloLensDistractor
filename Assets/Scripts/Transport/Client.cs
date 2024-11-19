@@ -1,13 +1,12 @@
 ﻿using System;
 using DistractorProject.Core;
-using DistractorProject.Transport.DataContainer;
 using Unity.Collections;
 using Unity.Networking.Transport;
 using UnityEngine;
 
 namespace DistractorProject.Transport
 {
-    public class Client : Singleton<Client>
+    public class Client : Singleton<Client>, INetworkManager
     {
         [SerializeField]
         private ConnectionDataSettings settings = new()
@@ -18,6 +17,7 @@ namespace DistractorProject.Transport
         
         private NetworkDriver _driver;
         private NetworkConnection _connection;
+        private NetworkPipeline _pipeline;
 
         private NetworkMessageEventHandler _eventHandler;
 
@@ -32,16 +32,7 @@ namespace DistractorProject.Transport
             base.Awake();
             _eventHandler = new NetworkMessageEventHandler();
         }
-
-        private void Start()
-        {
-            
-            _driver = NetworkDriver.Create();
-            var endpoint = settings.NetworkEndpoint;
-            _connection = _driver.Connect(endpoint);
-        }
         
-
         private void OnDestroy()
         {
             _driver.Dispose();
@@ -75,14 +66,14 @@ namespace DistractorProject.Transport
             }
         }
 
-        public bool SendNetworkMessage(ISerializer data)
+        public bool TransmitNetworkMessage(ISerializer data)
         {
             if (!_connection.IsCreated)
             {
                 return false;
             }
 
-            _driver.BeginSend(NetworkPipeline.Null, _connection, out var writer);
+            _driver.BeginSend(_pipeline, _connection, out var writer);
             ConnectionDataWriter.SendMessage(ref writer, data);
             _driver.EndSend(writer);
             return true;
@@ -99,7 +90,19 @@ namespace DistractorProject.Transport
             }
         }
 
-        
+
+        public void Connect()
+        {
+            if (_connection.IsCreated)
+            {
+                return;
+            }
+            _driver = NetworkDriver.Create();
+            _pipeline = PipelineCreation.CreatePipeline(ref _driver);
+            var endpoint = settings.NetworkEndpoint;
+            _connection = _driver.Connect(endpoint);
+            
+        }
     }
 
 }
