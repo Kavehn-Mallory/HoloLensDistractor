@@ -534,6 +534,7 @@ GameObject:
   - component: {fileID: 1468180560}
   - component: {fileID: 1468180559}
   - component: {fileID: 1468180561}
+  - component: {fileID: 1468180562}
   m_Layer: 0
   m_Name: StudyManager
   m_TagString: Untagged
@@ -553,7 +554,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e714c9dc70d4f4d91fc85b80bbf30db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distractorPlacement: {fileID: 1740053206}
+  distractorPlacement: {fileID: 0}
 --- !u!4 &1468180560
 Transform:
   m_ObjectHideFlags: 0
@@ -587,6 +588,20 @@ MonoBehaviour:
     conditions:
       loadLevels: -1
       noiseLevels: 19
+--- !u!114 &1468180562
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1468180558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7198b1559261491498dd618024464bf6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  studyStages:
+  - {fileID: 1740053206}
 --- !u!1001 &1490467469
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -777,7 +792,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1740053203}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e1f85eaf7d54ba44e845d91e7bb42c88, type: 3}
   m_Name: 
@@ -807,7 +822,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1740053203}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: adf6557765fb498984486f26a169ad4e, type: 3}
+  m_Script: {fileID: 11500000, guid: 41d15b1e2e214d78944b16a227bce948, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   mainCamera: {fileID: 964458036}

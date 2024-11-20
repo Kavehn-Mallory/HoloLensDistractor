@@ -6,11 +6,6 @@ namespace DistractorProject.Core
     {
         public void Serialize(ref DataStreamWriter writer);
         
-        public void Deserialize(ref DataStreamReader dataStreamReader);
-    }
-
-    public interface IStudyStageEvent : ISerializer
-    {
-        public bool IsStartEvent { get; set; }
+        public void Deserialize(ref DataStreamReader reader);
     }
 }

@@ -11,7 +11,7 @@ namespace DistractorProject.Transport.DataContainer
         {
         }
 
-        public void Deserialize(ref DataStreamReader dataStreamReader)
+        public void Deserialize(ref DataStreamReader reader)
         {
         }
     }

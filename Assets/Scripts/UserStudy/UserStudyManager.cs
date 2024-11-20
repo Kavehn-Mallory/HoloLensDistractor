@@ -22,6 +22,7 @@ namespace DistractorProject.UserStudy
             Manager.RegisterCallback<UserStudyBeginData>(OnStudyBegin);
             foreach (var studyStage in studyStages)
             {
+                studyStage.Manager = Manager;
                 if (studyStage is ReceivingStudyStageComponent receiver)
                 {
                     receiver.RegisterStudyComponent(Manager);
@@ -38,7 +39,12 @@ namespace DistractorProject.UserStudy
 
         private void OnStudyBegin(UserStudyBeginData obj)
         {
-            if (studyStages[0] is SendingStudyStageComponent sender)
+            BeginNextStudy();
+        }
+
+        private void BeginNextStudy()
+        {
+            if (studyStages[_studyIndex] is SendingStudyStageComponent sender)
             {
                 sender.StartStudy(Manager);
             }
@@ -49,6 +55,7 @@ namespace DistractorProject.UserStudy
         }
 
 
+        // ReSharper disable Unity.PerformanceAnalysis
         private void OnStudyStageEnds()
         {
             var study = studyStages[_studyIndex];
@@ -67,11 +74,7 @@ namespace DistractorProject.UserStudy
                 return;
             }
 
-            var nextStudy = studyStages[_studyIndex];
-            if (nextStudy is SendingStudyStageComponent sender)
-            {
-                sender.StartStudy(Manager);
-            }
+            BeginNextStudy();
         }
 
     }

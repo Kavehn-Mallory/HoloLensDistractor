@@ -14,9 +14,9 @@ namespace DistractorProject.Transport.DataContainer
             writer.WriteInt(markerCount);
         }
 
-        public void Deserialize(ref DataStreamReader dataStreamReader)
+        public void Deserialize(ref DataStreamReader reader)
         {
-            markerCount = dataStreamReader.ReadInt();
+            markerCount = reader.ReadInt();
         }
     }
 }

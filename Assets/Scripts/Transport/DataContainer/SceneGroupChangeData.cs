@@ -14,9 +14,9 @@ namespace DistractorProject.Transport.DataContainer
             writer.WriteInt(index);
         }
 
-        public void Deserialize(ref DataStreamReader dataStreamReader)
+        public void Deserialize(ref DataStreamReader reader)
         {
-            index = dataStreamReader.ReadInt();
+            index = reader.ReadInt();
         }
     }
 }

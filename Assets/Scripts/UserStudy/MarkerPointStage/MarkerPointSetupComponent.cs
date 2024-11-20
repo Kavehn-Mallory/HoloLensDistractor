@@ -2,31 +2,30 @@
 using DistractorProject.Transport;
 using DistractorProject.Transport.DataContainer;
 using UnityEngine;
-using Image = UnityEngine.UI.Image;
+using UnityEngine.UI;
 
-namespace DistractorProject
+namespace DistractorProject.UserStudy.MarkerPointStage
 {
-    public class MarkerPointSetup : MonoBehaviour
+    public class MarkerPointSetupComponent : SendingStudyStageComponent<MarkerPointStageEvent>
     {
+        
         [SerializeField] private Canvas markerPointCanvas;
         [SerializeField] private Vector2Int zones;
         [SerializeField] private Image marker;
 
         private Image[] _markerPoints = Array.Empty<Image>();
         private int _currentMarker;
-
-        public Action OnMarkerSetupComplete = delegate { };
+        
+        public int MarkerPointCount => _markerPoints.Length;
         
         private void Awake()
         {
             markerPointCanvas.gameObject.SetActive(false);
-            _markerPoints = CreateMarkerPoints(marker, zones);
+            _markerPoints = CreateMarkerPoints(marker, markerPointCanvas, zones);
 
         }
-
-        public int MarkerPointCount => _markerPoints.Length;
-
-        private Image[] CreateMarkerPoints(Image image, Vector2Int markerZones)
+        
+        private static Image[] CreateMarkerPoints(Image image, Canvas markerPointCanvas, Vector2Int markerZones)
         {
             var result = new Image[markerZones.x * markerZones.y];
 
@@ -37,7 +36,7 @@ namespace DistractorProject
             {
                 for (int x = 0; x < markerZones.x; x++)
                 {
-                    var markerInstance = Instantiate(marker, new Vector3(0.5f * xStep + xStep * x, 0.5f * yStep + yStep * y), Quaternion.identity, markerPointCanvas.transform);
+                    var markerInstance = Instantiate(image, new Vector3(0.5f * xStep + xStep * x, 0.5f * yStep + yStep * y), Quaternion.identity, markerPointCanvas.transform);
                     result[y * markerZones.x + x] = markerInstance;
                     markerInstance.enabled = false;
                 }
@@ -46,25 +45,31 @@ namespace DistractorProject
             return result;
         }
 
-        public void StartMarkerPointSetup()
+        public override void StartStudy(INetworkManager manager)
         {
-            Server.Instance.RegisterCallback<ConfirmationData>(OnPointSelectionConfirmed);
+            manager.RegisterCallback<ConfirmationData>(OnStartConfirmed);
+            base.StartStudy(manager);
+        }
+
+        private void OnStartConfirmed(ConfirmationData obj)
+        {
+            Manager.UnregisterCallback<ConfirmationData>(OnStartConfirmed);
+            Manager.RegisterCallback<ConfirmationData>(OnPointSelectionConfirmed);
             _markerPoints[0].enabled = true;
             markerPointCanvas.gameObject.SetActive(true);
-            Debug.Log("Starting Marker-Setup");
-            Server.Instance.TransmitNetworkMessage(new MarkerCountData
+            Manager.TransmitNetworkMessage(new MarkerCountData
             {
                 markerCount = MarkerPointCount
             });
         }
-
+        
         private void ActivateMarker()
         {
             _markerPoints[_currentMarker].enabled = false;
             _currentMarker++;
             _markerPoints[_currentMarker].enabled = true;
         }
-
+        
         private void OnPointSelectionConfirmed(ConfirmationData data)
         {
             if (data.confirmationNumber != _currentMarker)
@@ -79,20 +84,18 @@ namespace DistractorProject
             }
             Debug.Log("Activating next marker");
             ActivateMarker();
-            Server.Instance.TransmitNetworkMessage(new ConfirmationData
+            Manager.TransmitNetworkMessage(new ConfirmationData
             {
                 confirmationNumber = _currentMarker
             });
         }
-
+        
         public void EndMarkerPointSetup()
         {
             _markerPoints[^1].enabled = false;
             markerPointCanvas.gameObject.SetActive(false);
-            Server.Instance.UnregisterCallback<ConfirmationData>(OnPointSelectionConfirmed);
-            //todo remove this and just sign up for the next event in the client. Might need to end the event for the placement system tho
-            Server.Instance.TransmitNetworkMessage(new MarkerSetupEndData());
-            OnMarkerSetupComplete.Invoke();
+            Manager.UnregisterCallback<ConfirmationData>(OnPointSelectionConfirmed); 
+            EndStudy(Manager);
         }
     }
 }

@@ -1,24 +1,26 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class LookAtCamera : MonoBehaviour
+namespace DistractorProject
 {
+    public class LookAtCamera : MonoBehaviour
+    {
 
-    private Transform _cameraTransform;
+        private Transform _cameraTransform;
     
-    private void Awake()
-    {
-        if (!Camera.main)
+        private void Awake()
         {
-            Debug.LogError("No main camera found. Is required for correct positioning of target", this);
-            enabled = false;
-            return;
+            if (!Camera.main)
+            {
+                Debug.LogError("No main camera found. Is required for correct positioning of target", this);
+                enabled = false;
+                return;
+            }
+            _cameraTransform = Camera.main.transform;
         }
-        _cameraTransform = Camera.main.transform;
-    }
 
-    private void Update()
-    {
-        this.transform.SetPositionAndRotation(transform.position, _cameraTransform.rotation);
+        private void Update()
+        {
+            this.transform.SetPositionAndRotation(transform.position, _cameraTransform.rotation);
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace DistractorProject.UserStudy
             {
                 IsStartEvent = true
             });
+            TriggerStudyStartEvent();
         }
 
         public override void EndStudy(INetworkManager manager)
@@ -21,6 +22,7 @@ namespace DistractorProject.UserStudy
             {
                 IsStartEvent = false
             });
+            TriggerStudyEndEvent();
         }
     }
     

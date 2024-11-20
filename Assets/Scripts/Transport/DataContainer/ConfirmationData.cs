@@ -15,9 +15,9 @@ namespace DistractorProject.Transport.DataContainer
             writer.WriteInt(confirmationNumber);
         }
 
-        public void Deserialize(ref DataStreamReader dataStreamReader)
+        public void Deserialize(ref DataStreamReader reader)
         {
-            confirmationNumber = dataStreamReader.ReadInt();
+            confirmationNumber = reader.ReadInt();
         }
     }
 }

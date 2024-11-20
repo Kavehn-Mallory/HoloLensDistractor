@@ -342,12 +342,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1707515074}
-  - component: {fileID: 1707515073}
-  - component: {fileID: 1707515072}
   - component: {fileID: 1707515078}
-  - component: {fileID: 1707515077}
-  - component: {fileID: 1707515076}
-  - component: {fileID: 1707515075}
+  - component: {fileID: 1707515079}
   m_Layer: 0
   m_Name: UserStudyManager
   m_TagString: Untagged
@@ -355,35 +351,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1707515072
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1707515071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 542f2dcf1cb244af9279448d63ab3107, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  markerPointCanvas: {fileID: 1502144672}
-  zones: {x: 3, y: 2}
-  marker: {fileID: 2820295930019978443, guid: de6ba9a74e0b11146b6e3c32aef72f75, type: 3}
---- !u!114 &1707515073
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1707515071}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2f6e92ad0564cfdafd83eded1be211e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  markerPointSetup: {fileID: 1707515072}
-  sceneLoader: {fileID: 1621033332}
 --- !u!4 &1707515074
 Transform:
   m_ObjectHideFlags: 0
@@ -399,44 +366,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1707515075
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1707515071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a3e6025834c46449f8048a8c2bc84f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1707515076
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1707515071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7198b1559261491498dd618024464bf6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  studyStages:
-  - {fileID: 1707515075}
---- !u!114 &1707515077
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1707515071}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b073b3b5d0aa49aaa929ac746daa5501, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &1707515078
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -450,7 +379,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   studyStages:
-  - {fileID: 1707515077}
+  - {fileID: 1707515079}
+--- !u!114 &1707515079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1707515071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 288ee7ed267c4c6b9b46207776191f24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  markerPointCanvas: {fileID: 1502144672}
+  zones: {x: 3, y: 2}
+  marker: {fileID: 2820295930019978443, guid: de6ba9a74e0b11146b6e3c32aef72f75, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
