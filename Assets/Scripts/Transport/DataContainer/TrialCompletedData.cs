@@ -1,23 +1,21 @@
-﻿using System;
-using DistractorProject.Core;
+﻿using DistractorProject.Core;
 using Unity.Collections;
 
 namespace DistractorProject.Transport.DataContainer
 {
-    [Serializable]
-    public struct UserStudyBeginData : ISerializer
+    public struct TrialCompletedData : ISerializer
     {
 
-        public int studyIndex;
+        public byte LoadLevel;
         
         public void Serialize(ref DataStreamWriter writer)
         {
-            writer.WriteInt(studyIndex);
+            writer.WriteByte(LoadLevel);
         }
 
         public void Deserialize(ref DataStreamReader reader)
         {
-            studyIndex = reader.ReadInt();
+            LoadLevel = reader.ReadByte();
         }
     }
 }

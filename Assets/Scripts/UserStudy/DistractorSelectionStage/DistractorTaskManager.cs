@@ -1,16 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using DistractorProject.Transport;
+using DistractorProject.Transport.DataContainer;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
-namespace DistractorProject.UserStudy
+namespace DistractorProject.UserStudy.DistractorSelectionStage
 {
-    public class UserStudySetup : MonoBehaviour
+    public class DistractorTaskManager : SendingStudyStageComponent<DistractorSelectionStageEvent>
     {
         public Study[] trials = Array.Empty<Study>();
-        
-        
+        private int _currentTrialIndex;
+
+        private int _currentConditionIndex;
+
         private void Awake()
+        {
+            GenerateTrialOptions();
+        }
+
+        private void GenerateTrialOptions()
         {
             for (var i = 0; i < trials.Length; i++)
             {
@@ -50,39 +58,64 @@ namespace DistractorProject.UserStudy
             }
         }
 
-        private void StartStudy(Study study)
+        public override void StartStudy(INetworkManager manager)
         {
-            var participantStartIndex = Random.Range(0, study.conditionList.Count);
-            
-            
+            Manager.RegisterCallback<ConfirmationData>(OnStudyBegin);
+            base.StartStudy(manager);
         }
 
-        private void AdvanceTrial(Study study, ref int currentIndex, in int startIndex)
+        private void OnStudyBegin(ConfirmationData data)
         {
-            currentIndex = (currentIndex + 1) % study.conditionList.Count;
+            Manager.UnregisterCallback<ConfirmationData>(OnStudyBegin);
+            Manager.RegisterCallback<TrialCompletedData>(OnTrialCompleted);
+            _currentTrialIndex = 0;
+            _currentConditionIndex = 0;
+            StartTrial();
+        }
 
-            if (currentIndex != startIndex)
+        private void StartTrial()
+        {
+            var trial = trials[_currentTrialIndex];
+            var positions = new int[]
             {
-                StartNextTrial(study.conditionList[currentIndex]);
-                return;
+                0, 1, 2, 3, 4, 5
+            };
+            Manager.TransmitNetworkMessage(new DistractorSelectionTrialData
+            {
+                loadLevel = (byte)trial.conditionList[_currentConditionIndex].Item1,
+                selectionCount = trial.selectionsPerTrial,
+                markers = positions
+            });
+            _currentConditionIndex++;
+        }
+
+        private void OnTrialCompleted(TrialCompletedData obj)
+        {
+            if (_currentConditionIndex >= trials[_currentTrialIndex].conditionList.Count)
+            {
+                _currentTrialIndex++;
+                //todo check if we have another condition 
+                if (_currentTrialIndex >= trials.Length)
+                {
+                    //we are done
+                    EndStudy(Manager);
+                    return;
+                }
+                _currentConditionIndex = 0;
             }
-
-            EndStudy();
-
+            StartTrial();
+            //todo check if there are more trials and start the next one 
         }
-
-        private void EndStudy()
+        
+        public override void EndStudy(INetworkManager manager)
         {
-            throw new NotImplementedException();
+            Manager.UnregisterCallback<TrialCompletedData>(OnTrialCompleted);
+            base.EndStudy(manager);
         }
-
-        private void StartNextTrial((LoadLevel, NoiseLevel) studyCondition)
-        {
-            throw new NotImplementedException();
-        }
+        
 
 
-        private List<NoiseLevel> GenerateNoiseLevels(NoiseLevel noiseLevel)
+        private static List<NoiseLevel> GenerateNoiseLevels(NoiseLevel noiseLevel)
         {
             var result = new List<NoiseLevel>();
 
@@ -94,7 +127,7 @@ namespace DistractorProject.UserStudy
             return result;
         }
         
-        private List<LoadLevel> GenerateLoadLevels(LoadLevel loadLevel)
+        private static List<LoadLevel> GenerateLoadLevels(LoadLevel loadLevel)
         {
             var result = new List<LoadLevel>();
             

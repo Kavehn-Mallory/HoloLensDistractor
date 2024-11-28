@@ -10,7 +10,7 @@ namespace DistractorProject
     {
         public int distractorIndex = -1;
 
-        public DistractorTaskManager Manager { get; set; }
+        public DistractorTaskComponent Component { get; set; }
 
         private PressableButton _button;
         private TMP_Text _text;
@@ -41,7 +41,7 @@ namespace DistractorProject
 
         private void OnButtonClicked()
         {
-            Manager.OnButtonClicked(distractorIndex);
+            Component.OnButtonClicked(distractorIndex);
         }
     
     }

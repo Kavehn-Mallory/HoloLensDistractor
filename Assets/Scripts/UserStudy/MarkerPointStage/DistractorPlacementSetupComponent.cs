@@ -14,6 +14,8 @@ namespace DistractorProject.UserStudy.MarkerPointStage
         private readonly List<Vector3> _distractorPlacementPositions = new();
         private Transform _mainCameraTransform;
 
+        public List<Vector3> DistractorPlacementPositions => _distractorPlacementPositions;
+
         private int _currentMarkerPoint;
         private int _markerPointCount;
         private bool _acceptInput;

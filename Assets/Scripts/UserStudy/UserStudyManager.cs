@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.IO;
 using DistractorProject.Transport;
 using DistractorProject.Transport.DataContainer;
 using UnityEngine;
@@ -10,7 +11,7 @@ namespace DistractorProject.UserStudy
     {
         public StudyStageComponent[] studyStages = Array.Empty<StudyStageComponent>();
 
-        private int _studyIndex;
+        private int _studyIndex = -1;
 
         protected float SecondsToWait = 5f;
 
@@ -27,34 +28,42 @@ namespace DistractorProject.UserStudy
                 {
                     receiver.RegisterStudyComponent(Manager);
                 }
-                
+
                 studyStage.OnStudyEnd += OnStudyStageEnds;
             }
 
-            if (Manager is Client)
+            if (studyStages.Length <= 0)
             {
-                Manager.TransmitNetworkMessage(new UserStudyBeginData());
+                yield return null;
+            }
+            if (studyStages[0] is ReceivingStudyStageComponent)
+            {
+                _studyIndex++;
+                Manager.TransmitNetworkMessage(new UserStudyBeginData
+                {
+                    studyIndex = _studyIndex
+                });
             }
         }
+
 
         private void OnStudyBegin(UserStudyBeginData obj)
         {
-            BeginNextStudy();
-        }
-
-        private void BeginNextStudy()
-        {
-            if (studyStages[_studyIndex] is SendingStudyStageComponent sender)
+            if (obj.studyIndex <= _studyIndex)
             {
-                sender.StartStudy(Manager);
+                throw new ArgumentException($"The given study index {obj.studyIndex} is smaller or equal to the current index {_studyIndex}. This study was started already");
             }
-            else
+
+            _studyIndex = obj.studyIndex;
+            if (studyStages[_studyIndex] is not SendingStudyStageComponent sender)
             {
-                Manager.TransmitNetworkMessage(new UserStudyBeginData());
+                throw new Exception("The selected study is a receiver not a sender, something went wrong");
             }
+            Debug.Log($"Starting next sending study {_studyIndex}");
+            sender.StartStudy(Manager);
         }
-
-
+        
+        
         // ReSharper disable Unity.PerformanceAnalysis
         private void OnStudyStageEnds()
         {
@@ -63,18 +72,15 @@ namespace DistractorProject.UserStudy
             {
                 receiver.UnregisterStudyComponent(Manager);
             }
-            _studyIndex++;
-            
-            //start next study
-            if (_studyIndex >= studyStages.Length)
+            if (_studyIndex + 1 < studyStages.Length && studyStages[_studyIndex + 1] is ReceivingStudyStageComponent)
             {
-                //todo lets do something in here?
-                Debug.Log("Study completed");
-                //Client.Instance.UnregisterCallback<StartStudyStageData>(OnNextStudyStageStart);
-                return;
+                _studyIndex++;
+                Debug.Log($"Starting next receiver study {_studyIndex}");
+                Manager.TransmitNetworkMessage(new UserStudyBeginData
+                {
+                    studyIndex = _studyIndex
+                });
             }
-
-            BeginNextStudy();
         }
 
     }

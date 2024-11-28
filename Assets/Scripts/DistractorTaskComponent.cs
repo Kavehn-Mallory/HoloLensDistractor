@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace DistractorProject
 {
-    public class DistractorTaskManager : MonoBehaviour
+    public class DistractorTaskComponent : MonoBehaviour
     {
     
         [SerializeField] private Canvas canvas;
@@ -29,6 +29,8 @@ namespace DistractorProject
         [SerializeField] private DistractorShapeGroup[] distractorShapes;
         [Tooltip("Set to true if the target should never be the same target in two consecutiveTrials")]
         [SerializeField] private bool changeTargetAfterEveryTrial;
+
+        public event Action OnTaskCompleted = delegate { };
     
         
         private int _currentGroup;
@@ -41,10 +43,14 @@ namespace DistractorProject
         private Camera _mainCamera;
         private DistractorComponent _selectedDistractor;
 
+        private int _trialCount;
+        private int _currentTrial;
+
 
         private void Start()
         {
             _currentGroup = 0;
+            _currentTrial = 0;
             _targetElementIndex = -1;
             _distractorShapes = new string[distractorShapes.Length][];
             _targetShapes = new string[distractorShapes.Length][];
@@ -61,12 +67,12 @@ namespace DistractorProject
                 var labelInstance = Instantiate(label, canvas.transform, false);
                 labelInstance.gameObject.name = "Distractor";
                 labelInstance.distractorIndex = i;
-                labelInstance.Manager = this;
+                labelInstance.Component = this;
                 _distractors[i] = labelInstance.GetComponent<TMP_Text>();
             }
 
             var peripheralDistractor = Instantiate(label, canvas.transform, false);
-            peripheralDistractor.Manager = this;
+            peripheralDistractor.Component = this;
             _peripheralDistractor = peripheralDistractor.GetComponent<TMP_Text>();
             _peripheralDistractor.gameObject.name = "Peripheral Distractor";
         
@@ -81,11 +87,12 @@ namespace DistractorProject
             }
 
             RepositionCanvas(_mainCamera.transform.position + Vector3.forward * defaultDistanceFromCamera);
-            StartNextTrial();
+            DisableCanvas();
+            //StartNextTrial();
         }
     
 
-        private void RepositionCanvas(Vector3 position)
+        public void RepositionCanvas(Vector3 position)
         {
         
             var distanceFromCamera = math.distance(position, _mainCamera.transform.position);
@@ -130,6 +137,12 @@ namespace DistractorProject
         [ContextMenu("Next Trial")]
         public void StartNextTrial()
         {
+            if (_currentTrial >= _trialCount)
+            {
+                OnTaskCompleted.Invoke();
+                return;
+            }
+            Debug.Log("Starting next trial");
             var length = _distractorShapes[_currentGroup].Length;
             foreach (var distractor in _distractors)
             {
@@ -152,22 +165,11 @@ namespace DistractorProject
         
             _peripheralDistractor.text = _targetShapes[_currentGroup][Random.Range(0, _targetShapes[_currentGroup].Length)];
         }
-
-        [ContextMenu("Next Group")]
-        public void SelectNextGroup()
-        {
-            _currentGroup++;
-            if (_currentGroup < _distractorShapes.Length)
-            {
-                _targetElementIndex = -1;
-                StartNextTrial();
-                return;
-            }
-            Debug.Log("Trials completed");
-        }
+        
 
         public void OnButtonClicked(int id)
         {
+            _currentTrial++;
             if (_targetElementIndex == id && id >= 0)
             {
                 OnCorrectButtonClicked();
@@ -224,7 +226,25 @@ namespace DistractorProject
             [Tooltip("Separate options with a ','")]
             public string targetLetters;
         }
-    
-    
+
+
+        public void StartNewTrial(int repetitionCount, int distractorGroup)
+        {
+            _currentGroup = distractorGroup;
+            _trialCount = repetitionCount;
+            _currentTrial = 0;
+            StartNextTrial();
+
+        }
+
+        public void EnableCanvas()
+        {
+            canvas.enabled = true;
+        }
+        
+        public void DisableCanvas()
+        {
+            canvas.enabled = false;
+        }
     }
 }

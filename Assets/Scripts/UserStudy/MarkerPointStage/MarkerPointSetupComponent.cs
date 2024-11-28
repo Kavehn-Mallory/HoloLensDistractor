@@ -82,7 +82,6 @@ namespace DistractorProject.UserStudy.MarkerPointStage
                 EndMarkerPointSetup();
                 return;
             }
-            Debug.Log("Activating next marker");
             ActivateMarker();
             Manager.TransmitNetworkMessage(new ConfirmationData
             {
