@@ -45,10 +45,12 @@ namespace DistractorProject
 
         private int _trialCount;
         private int _currentTrial;
+        private bool _acceptingInput;
 
 
         private void Start()
         {
+            _acceptingInput = false;
             _currentGroup = 0;
             _currentTrial = 0;
             _targetElementIndex = -1;
@@ -89,6 +91,29 @@ namespace DistractorProject
             RepositionCanvas(_mainCamera.transform.position + Vector3.forward * defaultDistanceFromCamera);
             DisableCanvas();
             //StartNextTrial();
+        }
+
+        public void IncreaseDistance()
+        {
+            if (!_acceptingInput)
+            {
+                return;
+            }
+            var currentPosition = canvas.transform.position;
+            var distance = math.distance(currentPosition, _mainCamera.transform.position);
+            RepositionCanvas(_mainCamera.transform.position + (distance + 0.5f) * _mainCamera.transform.forward);
+        }
+        
+        public void DecreaseDistance()
+        {
+            if (!_acceptingInput)
+            {
+                return;
+            }
+            var currentPosition = canvas.transform.position;
+            var distance = math.distance(currentPosition, _mainCamera.transform.position);
+            var multiplier = math.max(0.5f, distance - 0.5f);
+            RepositionCanvas(_mainCamera.transform.position +  multiplier * _mainCamera.transform.forward);
         }
     
 
@@ -139,6 +164,7 @@ namespace DistractorProject
         {
             if (_currentTrial >= _trialCount)
             {
+                _acceptingInput = false;
                 OnTaskCompleted.Invoke();
                 return;
             }
@@ -232,6 +258,7 @@ namespace DistractorProject
         {
             _currentGroup = distractorGroup;
             _trialCount = repetitionCount;
+            _acceptingInput = true;
             _currentTrial = 0;
             StartNextTrial();
 

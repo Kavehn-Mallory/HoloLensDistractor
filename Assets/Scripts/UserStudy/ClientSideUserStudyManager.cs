@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using DistractorProject.Transport;
-using PlasticPipe.PlasticProtocol.Client;
+using UnityEngine;
 
 namespace DistractorProject.UserStudy
 {
@@ -13,6 +13,11 @@ namespace DistractorProject.UserStudy
         {
             Client.Instance.Connect();
             return base.Start();
+        }
+
+        public void ButtonDebug()
+        {
+            Debug.Log("Button was pressed");
         }
     }
 }
