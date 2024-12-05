@@ -33,7 +33,7 @@ namespace DistractorProject.Transport
             }
         }
 
-        private List<Type> GetSerializableTypes()
+        public static List<Type> GetSerializableTypes()
         {
             
 #if UNITY_EDITOR

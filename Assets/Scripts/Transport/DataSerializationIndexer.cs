@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using DistractorProject.Core;
-using UnityEditor;
 using UnityEngine;
 
 namespace DistractorProject.Transport
@@ -14,7 +12,7 @@ namespace DistractorProject.Transport
         [RuntimeInitializeOnLoadMethod]
         public static void CalculateTypeIndices()
         {
-            var types = TypeCache.GetTypesDerivedFrom<ISerializer>().ToList();
+            var types = NetworkMessageEventHandler.GetSerializableTypes();
             types.Sort(SortByName);
 
             _typeIndices = new Type[types.Count + 1];

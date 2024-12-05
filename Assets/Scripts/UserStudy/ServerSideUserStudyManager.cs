@@ -1,5 +1,4 @@
-﻿using System;
-using DistractorProject.Transport;
+﻿using DistractorProject.Transport;
 
 namespace DistractorProject.UserStudy
 {

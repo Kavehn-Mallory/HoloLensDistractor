@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
 using DistractorProject.Core;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -10,6 +12,7 @@ namespace DistractorProject.SceneManagement
     {
         private static bool _loadBootstrapper;
 
+#if UNITY_EDITOR
         [MenuItem("Tools/Toggle Bootstrapper", true)]
         private static bool SetToggleState()
         {
@@ -18,11 +21,12 @@ namespace DistractorProject.SceneManagement
         }
 
         [MenuItem("Tools/Toggle Bootstrapper")]
+
         public static void ToggleBootstrapper()
         {
             _loadBootstrapper = !_loadBootstrapper;
         }
-        
+#endif    
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         static async void Init()
         {
@@ -36,7 +40,8 @@ namespace DistractorProject.SceneManagement
                 bootstrapperLoadOperation = SceneManager.LoadSceneAsync("Bootstrapper", LoadSceneMode.Single);
             }
 #elif UNITY_ANDROID
-            bootstrapperLoadOperation = SceneManager.LoadSceneAsync("VR_Bootstrapper", LoadSceneMode.Single);
+//todo put custom scene for VR/AR
+            bootstrapperLoadOperation = SceneManager.LoadSceneAsync("Bootstrapper", LoadSceneMode.Single);
 
 #else
 //it's currently a little bit convoluted, but this way we can hopefully switch to the correct scene.
